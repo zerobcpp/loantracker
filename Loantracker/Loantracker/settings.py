@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'simple_history',
     'api',
-    'api.loan', 
+    'api.loan',
+    'api.insurance',
 ]
 
 MIDDLEWARE = [
