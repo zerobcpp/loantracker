@@ -22,7 +22,7 @@ class Loan(models.Model):
     history = HistoricalRecords()
     
     def __str__(self):
-        return f"Loan {self.loan}"
+        return f"{self.loan}"
     
     
     # def save(self, *args, **kwargs):
