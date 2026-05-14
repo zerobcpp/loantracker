@@ -18,7 +18,7 @@ const columns = [
   {
     accessorKey: 'location',
     header: 'Location',
-    cell: ({getValue}) => getValue() ? value : 'n/a',
+    cell: ({getValue}) => getValue() ? getValue() : 'n/a',
   },
   {
     accessorKey:'has_note',
@@ -101,7 +101,9 @@ return (
         <h1 className="text-xl font-semibold text-gray-800">Loans</h1>
         <input
           value={globalFilter}
-          onChange={e => setGlobalFilter(e.target.value)}
+          onChange={e => {setGlobalFilter(e.target.value)
+            table.setGlobalFilter(e.target.value)
+          }}
           placeholder="Search..."
           className="border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
@@ -110,7 +112,7 @@ return (
       {/* Table */}
       <div className="overflow-x-auto rounded border border-gray-200">
         <table className="w-full text-sm text-left">
-          <thead className="bg-gray-50 border-b border-gray-200">
+          <thead className="bg-blue-50 border-blue border-gray-200">
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map(header => (
@@ -128,9 +130,9 @@ return (
           </thead>
           <tbody>
             {table.getRowModel().rows.map(row => (
-              <tr key={row.id} className="border-b border-gray-100 hover:bg-gray-50">
+              <tr key={row.id} className="border-b border-gray-100 hover:bg-emerald-200 bg-stone-200">
                 {row.getVisibleCells().map(cell => (
-                  <td key={cell.id} className="px-4 py-3 text-gray-700">
+                  <td key={cell.id} className="px-4 py-3 text-white-700">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
@@ -149,14 +151,14 @@ return (
           <button
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
-            className="px-3 py-1 border rounded disabled:opacity-40 hover:bg-gray-100"
+            className="px-3 py-1 border rounded disabled:opacity-40 hover:bg-green-100 bg-blue-700 text-black"
           >
             Prev
           </button>
           <button
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
-            className="px-3 py-1 border rounded disabled:opacity-40 hover:bg-gray-100"
+            className="px-3 py-1 border rounded disabled:opacity-40 hover:bg-green-100 bg-blue-700 text-black"
           >
             Next
           </button>

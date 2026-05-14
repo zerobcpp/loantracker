@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 from simple_history.models import HistoricalRecords
 # Create your models here.
+BUCKET = 6
 
 class Loan(models.Model):
     loan = models.TextField()
@@ -25,25 +26,10 @@ class Loan(models.Model):
         return f"{self.loan}"
     
     
-    # def save(self, *args, **kwargs):
-    #     skip = False
-    #     if self.pk:
-    #         previous = Loan.objects.get(pk=self.pk)
-            
-    #         if previous.comment != self.comment or previous.location != self.location:
-    #             # since this line is pretty obvious, we can skip for now.
-    #             #self._change_reason = f"Comment changed from '{previous.comment}' to '{self.comment}'"
-    #             pass
-    #         else:
-    #             skip = True
-
-        
-    #     if skip:
-    #         self.skip_history_when_saving = True
-    #     super().save(*args, **kwargs)
-    #     if skip:
-    #         del self.skip_history_when_saving
-
+    def save(self, *args, **kwargs):
+        if not self.location:
+            self.location = (int(self.loan) * 1000000007)  % 6
+        super().save(*args, **kwargs)
 
 @receiver(post_save, sender=Loan)
 def create_insurance_for_new_loan(sender, instance, created, **kwargs):
