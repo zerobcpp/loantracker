@@ -5,7 +5,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 from simple_history.models import HistoricalRecords
 # Create your models here.
-BUCKET = 6
+BUCKET = 32
 
 class Loan(models.Model):
     loan = models.TextField()
@@ -28,10 +28,25 @@ class Loan(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.location:
-            self.location = (int(self.loan) * 1000000007)  % 6
+            self.location = (int(self.loan) * 1009) % BUCKET
         super().save(*args, **kwargs)
 
-@receiver(post_save, sender=Loan)
+class Commercial_loan(Loan):
+    history = HistoricalRecords(inherit=True)
+    class Meta:
+        
+        verbose_name = "Commercial Loan"
+        verbose_name_plural = "Commercial Loans"
+
+
+class Residential_loan(Loan):
+    history = HistoricalRecords(inherit=True)
+    class Meta:
+        verbose_name = "Residential Loan"
+        verbose_name_plural = "Residential Loans"
+        
+    
+@receiver(post_save, sender=[Loan, Commercial_loan, Residential_loan])
 def create_insurance_for_new_loan(sender, instance, created, **kwargs):
     if not created:
         return

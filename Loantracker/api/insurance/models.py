@@ -6,9 +6,9 @@ from datetime import timedelta
 
 class Insurance(models.Model):
     
-    loan = models.ForeignKey('loan.Loan', on_delete=models.CASCADE, related_name='insurances')
-    insurance_type = models.CharField(max_length=128)
-    insurance_provider = models.CharField(max_length=256)
+    loan = models.ForeignKey('loan.loan', on_delete=models.CASCADE, related_name='insurances')
+    insurance_type = models.CharField(max_length=128, null=True, blank=True)
+    insurance_provider = models.CharField(max_length=256, blank=True, null=True)
     insurance_agent = models.ForeignKey('InsuranceAgency', on_delete=models.SET_NULL, null=True, blank=True)
     #insurance_amount = models.DecimalField(max_digits=10, decimal_places=2)
     insurance_start_date = models.DateField(blank=True, null=True)
@@ -28,7 +28,7 @@ class Insurance(models.Model):
         
         
     def __str__(self):
-        return f"{self.loan} - {self.insurance_provider}"
+        return f"{self.loan}"
     
     
     
