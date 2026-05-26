@@ -49,23 +49,31 @@ const columns = [
     accessorKey: 'created_at',
     header: 'Created At',
     cell : ({getValue}) => getValue() ? new Date(getValue()).toLocaleDateString() : 'n/a',
+  },
+  {
+    accessorKey: 'has_ucc',
+    header: 'UCC',
+    cell : ({getValue}) => getValue() ? 'True' : 'False',
+  }
+  {
+    accessorKey: 'has assignment of lease',
+    header: 'Assignment of Lease',
+    cell : ({getValue}) => getValue() ? 'True' : 'False',
   }
   
 ]
 
 const LoanList = () => {
   const [loans, setLoans] = useState([])
-  const [commercialLoans, setCommercialLoans] = useState([])
   const [fallback, setFallback] = useState(['error fetching loans'])
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(true)
   const [globalFilter, setGlobalFilter] = useState('')
-  const [isCommercial, setIsCommercial] = useState(false)
 
 
   const fetchLoans = async () => {
     try {
-      const data = await getAll(isCommercial ? 'commercial' : 'residential')
+      const data = await getAll()
       setLoans(data)
       //console.log(data)
     } catch (err) {
@@ -79,7 +87,7 @@ const LoanList = () => {
   
   useEffect(() => {
     fetchLoans()
-  } , [isCommercial])
+  } , [])
 
 const table = useReactTable({
   data: loans,

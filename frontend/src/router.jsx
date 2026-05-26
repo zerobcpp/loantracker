@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import LoanList from './features/loans/components/LoanList'
-import Nav from '../components/Nav'
+import LoanList from './features/Loan/components/LoanList'
+import InsuranceList from './features/Insurance/components/InsuranceList'
+import Nav from './features/Home/components/Nav'
 
 
 const Router = () => {
@@ -9,7 +10,8 @@ const Router = () => {
             <Nav/>
             <Routes>
                 
-                <Route path="/loans" element={<LoanList />} />
+                <Route path="/loan" element={<LoanList />} />
+                <Route path="/insurance" element={<InsuranceList />} />
                 
             </Routes>
         </BrowserRouter>

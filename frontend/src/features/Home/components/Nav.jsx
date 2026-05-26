@@ -11,9 +11,11 @@ const Nav = () => {
           />
         </a>
         <ul>
-          <li>Loan Track</li>
-          <li>Admin Page</li>
-          <li>Tutorial</li>
+          
+          <li><a href="/loan">Loan Track</a></li>
+          <li><a href="/admin">Admin Page</a></li>
+          <li><a href="/insurance">Insurance</a></li>
+          <li><a href="/tutorial">Tutorial</a></li>
         </ul>
     </div>
   )

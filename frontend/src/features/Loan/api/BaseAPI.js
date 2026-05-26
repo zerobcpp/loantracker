@@ -15,7 +15,7 @@ const apiBase = async (endpoint, opts = {}) => {
   return res.json()
 }
 
-export const getAll = () => apiBase("loans/")
+export const getAll = (type) => apiBase(`loans/${type || ''}`)
 export const getOne = (id) => apiBase(`loans/${id}`)
 export const create = (data) => apiBase("loans/", {
   method: "POST",
