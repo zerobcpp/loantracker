@@ -1,0 +1,97 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Loan Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 20px;
+        }
+        .report-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .report-date {
+            font-size: 12px;
+            color: #666;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .summary {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #a19a9a93;
+            border-left: 10px solid #007bff;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="report-title">Loan Report</div>
+        <div class="report-date">Generated on: {{ time }}</div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Loan ID</th>
+                <th>closed date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for loan in loans %}
+            <tr>
+                <td>{{ loan.loan }}</td>
+                
+                {% if loan.closed_at %}
+                <td style="color: red"> {{ loan.closed_at }} </td>
+                {% else %}
+                <td style="color: green">Active</td>
+                {%endif%}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="summary">
+        <strong>Summary:</strong>
+        <p>Total Loans: {{ total_loans }} loans</p>
+        <p>Concluded Loans: {{ concluded_loans }} loans</p>
+        <p>Active Loans: {{ active_loans }} loans</p>
+        
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2026 Loan Tracker </p>
+    </div>
+</body>
+</html>
