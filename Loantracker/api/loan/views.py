@@ -9,7 +9,7 @@ from .serializers import ResidentialLoanSerializer, ResidentialLoanHistorySerial
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from django.utils import timezone
-from django.template.loader import render_to_string
+from django.http import JsonResponse
 # Create your views here.
 
 class ResidentialViewSet(viewsets.ModelViewSet):
@@ -19,7 +19,7 @@ class ResidentialViewSet(viewsets.ModelViewSet):
     @action(detail = True, methods=['get'])
     def history(self, request, pk=None):
         loan = self.get_object()
-        history = Residential_loan.history.all()
+        history = loan.history.all()
         serializer = LoanHistorySerializer(history, many=True)
         #print(serializer.data)
         return Response(serializer.data)
@@ -31,7 +31,7 @@ class CommercialViewSet(viewsets.ModelViewSet):
     @action(detail = True, methods=['get'])
     def history(self, request, pk=None):
         loan = self.get_object()
-        history = Commercial_loan.history.all()
+        history = loan.history.all()
         serializer = CommercialLoanHistorySerializer(history, many=True)
         #print(serializer.data)
         return Response(serializer.data)
@@ -48,15 +48,14 @@ def generate_report(request):
     concluded_loans = loans.filter(is_active=False).count()
     active_loans = loans.filter(is_active=True).count()
     
+    #print(loans)
     report = {
-        "time" : now,
+        "time": now.isoformat(),
         "total_loans": total,
-        "loans" : loans, 
+        "loans": LoanSerializer(loans, many=True).data,
         "concluded_loans": concluded_loans,
         "active_loans": active_loans,
     }
-    rendered_report = render_to_string('report_template.html', report)
-    #print(report)
-    return HttpResponse(rendered_report, content_type='text/html')
+    return JsonResponse(report)
     
     

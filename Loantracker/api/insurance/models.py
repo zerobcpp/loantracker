@@ -1,6 +1,8 @@
 from django.db import models
 from simple_history.models import HistoricalRecords
 from datetime import timedelta
+
+
 # Create your models here.
 
 
@@ -17,8 +19,8 @@ class Insurance(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     comment = models.TextField(blank=True, null=True)
-    
     history = HistoricalRecords()
+    
     
     def save(self, *args, **kwargs):
         if not self.insurance_end_date and self.insurance_start_date:

@@ -9,6 +9,7 @@ router.register(r'residential', ResidentialViewSet, basename='residential')
 router.register(r'commercial', CommercialViewSet, basename='commercial')
 
 urlpatterns = [
-    path('', include(router.urls)),
+    
     path('report', generate_report, name='generate_report'),
+    path('', include(router.urls)),
 ]
