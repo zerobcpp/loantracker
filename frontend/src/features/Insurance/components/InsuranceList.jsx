@@ -1,6 +1,6 @@
 import {use, useEffect,  useState } from "react";
 
-import { getAll } from "../api/BaseAPI";
+import { getAllInsurance, getInsuranceReport} from "../api/BaseAPI";
 import { useReactTable, 
     getCoreRowModel,
     getFilteredRowModel,
@@ -13,21 +13,21 @@ import { useReactTable,
 
 const columns = [
     {
-        accessorKey: 'loan',
+        accessorKey: 'loan_number',
         header: 'Loan#',
     },
     {
-        accessorKey: "Insurance",
+        accessorKey: "insurance_provider",
         header: 'Insurance',
         cell: ({getValue}) => getValue() ? getValue() : 'n/a',
     },
     {
-        accessorKey: 'Agent',
+        accessorKey: 'insurance_agent',
         header: 'Agent',
         cell: ({getValue}) => getValue() ? getValue() : 'n/a',
     },
     {
-        accessorKey: "Expire Date",
+        accessorKey: "insurance_end_date",
         header: 'Expire Date',
         cell: ({getValue}) => getValue() ? new Date(getValue()).toLocaleDateString() : 'n/a',
     }
@@ -39,14 +39,19 @@ const InsuranceList = () => {
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(true)
     const [globalFilter, setGlobalFilter] = useState('')
+    const [showReport, setShowReport] = useState(true)
+
 
     const fetchInsurance = async () => {
         try {
-            const data = await getAll('insurance')
-            setInsurance(data)
+            const data = showReport ? await getInsuranceReport() : await getAllInsurance()
+            const rows = Array.isArray(data) ? data : data.insurances
+            setInsurance(rows)
         } catch (err) {
             setError(err.message)
             setInsurance(fallback)
+            console.log(err)
+            
         }
         finally {
             setLoading(false)
@@ -55,7 +60,8 @@ const InsuranceList = () => {
 
     useEffect(() => {
         fetchInsurance()
-    }, [])
+        
+    }, [showReport])
 
     const table = useReactTable({
         data: insurance,
@@ -65,14 +71,14 @@ const InsuranceList = () => {
         getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
     })
-    if(loading) return <div>Loading...</div>
-    if(error) return <div>{error.message}</div>
+  if(loading) return <div>Loading...</div>
+  if(error != null) return <div>{error}</div>
 
   return (
     <div className="p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-semibold text-gray-800">Loans</h1>
+        <h1 className="text-xl font-semibold text-gray-800">Insurances</h1>
         <input
           value={globalFilter}
           onChange={e => {setGlobalFilter(e.target.value)
@@ -122,6 +128,17 @@ const InsuranceList = () => {
           Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
         </span>
         <div className="flex gap-2">
+          <button
+            onClick = { () => { setShowReport(!showReport)
+              console.log(showReport)
+            }
+          }
+
+            className="px-3 py-1 border rounded 
+            disabled:opacity-40 hover:bg-green-100 bg-orange-700 text-black"
+          >
+            {showReport ? 'Insurances' : 'Report'}
+          </button>
           <button
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}

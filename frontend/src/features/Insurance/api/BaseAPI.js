@@ -15,11 +15,13 @@ const apiBase = async (endpoint, opts = {}) => {
   return res.json()
 }
 
-export const getAll = () => apiBase("insurance/")
-export const getOne = (id) => apiBase(`insurance/${id}`)
-export const create = (data) => apiBase("insurance/", {
+export const getAllInsurance = () => apiBase("insurance/")
+export const getOneInsurance = (id) => apiBase(`insurance/${id}`)
+export const createInsurance = (data) => apiBase("insurance/", {
   method: "POST",
   body: JSON.stringify(data),
 })
+export const getInsuranceReport = () => apiBase("insurance/report/")
+
 
 export default apiBase

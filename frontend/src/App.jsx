@@ -1,5 +1,5 @@
 import './App.css'
-
+``
 
 function App() {
   return (
@@ -37,9 +37,7 @@ function App() {
       </main>
 
 
-      <footer className="app-footer">
-        <p>Built with React + Vite</p>
-      </footer>
+
     </div>
   )
 }
