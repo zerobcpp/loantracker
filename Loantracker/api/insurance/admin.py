@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Insurance, InsuranceAgency
 from simple_history.admin import SimpleHistoryAdmin
+from import_export import resources
 # Register your models here.
 
 
@@ -12,5 +13,8 @@ class InsuranceAdmin(SimpleHistoryAdmin):
     readonly_fields = ("created_at", "updated_at")
     ordering = ("-created_at",)
 
+
+
 admin.site.register(Insurance, SimpleHistoryAdmin)
 admin.site.register(InsuranceAgency, SimpleHistoryAdmin)
+

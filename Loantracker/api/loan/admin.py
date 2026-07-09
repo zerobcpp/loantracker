@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Commercial_loan, Residential_loan  
 from simple_history.admin import SimpleHistoryAdmin
+from import_export import resources
 # Register your models here.
 
 
@@ -50,6 +51,14 @@ class ResidentialloanAdmin(SimpleHistoryAdmin):
     )
     ordering = ("-created_at",)
 
+
+class ResidentialLoanResource(resources.ModelResource):
+    class Meta:
+        model = Residential_loan
+
+class CommercialLoanResource(resources.ModelResource):
+    class Meta:
+        model = Commercial_loan
 
 admin.site.register(Residential_loan, ResidentialloanAdmin)
 admin.site.register(Commercial_loan, CommercialloanAdmin)

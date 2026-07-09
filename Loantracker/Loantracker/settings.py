@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'simple_history',
+    'import_export',
     'api',
     'api.loan',
     'api.insurance',
@@ -125,3 +126,21 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+
+# FOR IMPORT EXPORT
+LOGGING = {
+    "version": 1,
+    "handlers": {
+        "console": {"level": "DEBUG", "class": "logging.StreamHandler"},
+    },
+    "loggers": {
+        "django.db.backends": {"level": "INFO", "handlers": ["console"]},
+        "import_export": {
+            "handlers": ["console"],
+            "level": "INFO",
+        },
+    },
+}
+
+
