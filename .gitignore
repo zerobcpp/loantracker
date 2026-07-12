@@ -213,3 +213,7 @@ __marimo__/
 *.xls
 *.ods
 *.tsv
+
+node_modules/
+dist/
+build/
