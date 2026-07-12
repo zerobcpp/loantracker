@@ -1,5 +1,0 @@
-
-const data = (item) => {
-    
-
-}
