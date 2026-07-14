@@ -23,27 +23,28 @@ class Command(BaseCommand):
                 for row in reader:
                     
                     s = row["TEXTJOIN Result"].split('##')
-                    loan = s[0]
-                    note = True if s[13] != '' else False
-                    title = True if s[20] != '' else False
-                    insurance = True if s[27] != '' else False
-                    Mortgage = True if s[34] != '' else False               
-                    
-                    
-                    c = Residential_loan(
-                        loan=loan,
-                        has_note=note,
-                        has_mortgage=Mortgage,
-                        has_title_insurance=title,
-                        has_insurance=insurance,
-                        location = "", 
-                    )
-                    c.save()
-                    
-                    value = row.get('TEXTJOIN Result')
-                    if value:
-                        s = value.split('##')
+                    if s:
+                        loan = s[0]
+                        note = True if s[13] != '' else False
+                        title = True if s[20] != '' else False
+                        insurance = True if s[27] != '' else False
+                        Mortgage = True if s[34] != '' else False               
+                        
+                        
+                        c = Residential_loan(
+                            loan=loan,
+                            has_note=note,
+                            has_mortgage=Mortgage,
+                            has_title_insurance=title,
+                            has_insurance=insurance,
+                            location = "-1"
+                        )
+                        c.save()
                         count += 1
+                    else:
+                        self.stdout.write(self.style.ERROR(f'Row skipped due to missing TEXTJOIN Result: {row}'))
+                    
+
 
                 self.stdout.write(self.style.SUCCESS(f'Processed {count} row(s) from {csv_file}'))
         except FileNotFoundError:

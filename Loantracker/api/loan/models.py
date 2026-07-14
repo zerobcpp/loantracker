@@ -53,16 +53,29 @@ class Residential_loan(Loan):
         verbose_name_plural = "Residential Loans"
         
     
-@receiver(post_save, sender=[Loan, Commercial_loan, Residential_loan])
 def create_insurance_for_new_loan(sender, instance, created, **kwargs):
     if not created:
         return
 
     # Only create an insurance record for loans that are meant to have insurance.
-
     Insurance = apps.get_model('insurance', 'Insurance')
     Insurance.objects.create(
-        loan = instance,
+        loan=instance,
         insurance_start_date=timezone.now().date(),
     )
+
+
+@receiver(post_save, sender=Loan)
+def create_insurance_for_new_base_loan(sender, instance, created, **kwargs):
+    create_insurance_for_new_loan(sender, instance, created, **kwargs)
+
+
+@receiver(post_save, sender=Commercial_loan)
+def create_insurance_for_new_commercial_loan(sender, instance, created, **kwargs):
+    create_insurance_for_new_loan(sender, instance, created, **kwargs)
+
+
+@receiver(post_save, sender=Residential_loan)
+def create_insurance_for_new_residential_loan(sender, instance, created, **kwargs):
+    create_insurance_for_new_loan(sender, instance, created, **kwargs)
         
