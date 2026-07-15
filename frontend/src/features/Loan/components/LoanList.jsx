@@ -148,7 +148,7 @@ const LoanList = () => {
 
   return (
     <div className="bg-stone-50 text-stone-800">
-      <header className="sticky top-0 z-10 border-b border-stone-200 bg-gradient-to-b from-white to-stone-50 px-8 pb-5 pt-7">
+      <header className="sticky top-0 z-10 border-b border-stone-200 bg-linear-to-b from-white to-stone-100 px-8 pb-5">
         <div className="flex items-center justify-between">
           <h1 className="font-serif text-2xl font-semibold tracking-tight text-stone-900">
             {isCommercial ? 'Commercial' : 'Residential'} Loan Document Tracker
@@ -186,7 +186,7 @@ const LoanList = () => {
             placeholder="Search loan no, location, comment…"
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="min-w-[220px] flex-1 rounded-md border border-stone-200 bg-white px-3.5 py-2.5 text-sm text-stone-800 focus:border-amber-700 focus:outline-none"
+            className="min-w-55 flex-1 rounded-md border border-stone-200 bg-white px-3.5 py-2.5 text-sm text-stone-800 focus:border-amber-700 focus:outline-none"
           />
           {['all', 'incomplete', 'complete'].map((f) => (
             <button
@@ -228,7 +228,7 @@ const LoanList = () => {
                         >
                           {flexRender(header.column.columnDef.header, header.getContext())}
                           {sortDir && (
-                            <span className="text-amber-700">{sortDir === 'asc' ? ' \u25B4' : ' \u25BE'}</span>
+                            <span className="text-amber-700 text-sm">{sortDir === 'asc' ? ' \u25B4' : ' \u25BE'}</span>
                           )}
                         </th>
                       )
