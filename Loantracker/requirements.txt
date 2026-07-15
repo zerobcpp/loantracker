@@ -4,3 +4,6 @@ django_import_export==4.4.1
 djangorestframework==3.17.1
 psycopg2==2.9.12
 python-dotenv==1.2.2
+django-import-export
+djangorestframework
+django-cors-headers
