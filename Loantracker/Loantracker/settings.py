@@ -10,17 +10,30 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(dotenv_path=BASE_DIR / '.env')
+
+DB_HOST = os.getenv('DB_HOST') or os.getenv('BACKEND')
+DB_NAME = os.getenv('DB_NAME') or os.getenv('DB')
+DB_USER = os.getenv('DB_USER') or os.getenv('user')
+DB_PASSWORD = os.getenv('DB_PASSWORD') or os.getenv('password', '')
+DB_PORT = int(os.getenv('DB_PORT', '5432'))
+DB_USE_IAM = os.getenv('DB_USE_IAM', 'false').lower() in ('1', 'true', 'yes')
+AWS_REGION = os.getenv('AWS_REGION', 'us-east-2')
+SECRET = os.getenv('SECRET')
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-9wwhx$-)jfj5l@-eo^_bm4pyl%)d-yo+kw6#yb%j)4huis1^#i'
+SECRET_KEY = SECRET
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -83,10 +96,29 @@ WSGI_APPLICATION = 'Loantracker.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+import boto3
+import psycopg2
+
+def _rds_iam_token():
+    client = boto3.client('rds', region_name='us-east-2')
+    return client.generate_db_auth_token(
+        DBHostname='database-1.cluster-cnkam8yss8hx.us-east-2.rds.amazonaws.com',
+        Port=5432,
+        DBUsername='postgres',
+        Region='us-east-2',
+    )
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "HOST": DB_HOST or 'database-1.cluster-cnkam8yss8hx.us-east-2.rds.amazonaws.com',
+        "PORT": DB_PORT,
+        "NAME": DB_NAME or 'postgres',
+        "USER": DB_USER or 'postgres',
+        "PASSWORD": DB_PASSWORD or (_rds_iam_token() if DB_USE_IAM else ''),
+        "OPTIONS": {
+            "sslmode": "require",
+        },
     }
 }
 
