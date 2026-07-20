@@ -64,14 +64,16 @@ def residential_loan_report(request):
     from api.loan.models import Residential_loan
     
     now = timezone.now()
-    loans = Residential_loan.objects.all().count()
-    needs_recorded = Residential_loan.objects.filter(has_recorded_mortgage=False).count()
+    total = Residential_loan.objects.all().fitler(is_active=True)
+    needs_recorded = total.filter(has_recorded_mortgage=False).count()
+    
+    
     
     report = {
         "time": now.isoformat(),
         "total_loans": total,
-        "loans": ResidentialLoanSerializer(loans, many=True).data,
-        "concluded_loans": concluded_loans,
+        "needs_recorded": needs_recorded,
+        
         "active_loans": active_loans,
     }
     return JsonResponse(report)
