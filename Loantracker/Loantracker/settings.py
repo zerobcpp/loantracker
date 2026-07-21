@@ -28,7 +28,6 @@ DB_USE_IAM = os.getenv('DB_USE_IAM', 'false').lower() in ('1', 'true', 'yes')
 AWS_REGION = os.getenv('AWS_REGION', 'us-east-2')
 SECRET = os.getenv('SECRET')
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
@@ -38,8 +37,10 @@ SECRET_KEY = SECRET
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
+USE_X_FORWARDED_HOST = True
+STATIC_ROOT = "/var/www/loantracker/static"
+STATIC_URL = "/static/"
 
 # Application definition
 
@@ -68,11 +69,29 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	"whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
+STORAGES = {
+"staticfiles" : {
+"BACKEND":"whitenoise.storage.CompressedManifestStaticFilesStorage"
+},
+}
+
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173"
+    "http://localhost:5173",
+	"http://lbdocumenttracker-1411096062.us-east-2.elb.amazonaws.com",
+	"http://localhost:80",
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+	"http://lbdocumenttracker-1411096062.us-east-2.elb.amazonaws.com",
+	"http://localhost",
+	"http://localhost:80",
+]
+
+CORS_ALLOW_ALL_ORIGINS = True
+
 ROOT_URLCONF = 'Loantracker.urls'
 
 TEMPLATES = [
@@ -99,14 +118,14 @@ WSGI_APPLICATION = 'Loantracker.wsgi.application'
 import boto3
 import psycopg2
 
-def _rds_iam_token():
-    client = boto3.client('rds', region_name='us-east-2')
-    return client.generate_db_auth_token(
-        DBHostname='database-1.cluster-cnkam8yss8hx.us-east-2.rds.amazonaws.com',
-        Port=5432,
-        DBUsername='postgres',
-        Region='us-east-2',
-    )
+#def _rds_iam_token():
+#    client = boto3.client('rds', region_name='us-east-2')
+#    return client.generate_db_auth_token(
+#        DBHostname='database-1.cluster-cnkam8yss8hx.us-east-2.rds.amazonaws.com',
+#        Port=5432,
+#        DBUsername='postgres',
+#        Region='us-east-2',
+#    )
 
 DATABASES = {
     "default": {
@@ -115,13 +134,13 @@ DATABASES = {
         "PORT": DB_PORT,
         "NAME": DB_NAME or 'postgres',
         "USER": DB_USER or 'postgres',
-        "PASSWORD": DB_PASSWORD or (_rds_iam_token() if DB_USE_IAM else ''),
-        "OPTIONS": {
-            "sslmode": "require",
-        },
+        "PASSWORD": DB_PASSWORD, #or (_rds_iam_token() if DB_USE_IAM else ''),
+        'OPTIONS': {
+            'sslmode': 'verify-full',
+            'sslrootcert': os.environ.get('DB_SSL_CERT', './global-bundle.pem'),
     }
 }
-
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -147,7 +166,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 
@@ -174,5 +193,6 @@ LOGGING = {
         },
     },
 }
+
 
 

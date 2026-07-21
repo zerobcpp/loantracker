@@ -1,4 +1,4 @@
-const BASE = process.env.BACKEND
+const BASE = import.meta.env.VITE_API_URL
 
 const apiBase = async (endpoint, opts = {}) => {
   const res = await fetch(`${BASE}${endpoint}`, {

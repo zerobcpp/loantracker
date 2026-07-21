@@ -58,6 +58,7 @@ cover/
 # Django stuff:
 *.log
 local_settings.py
+settings.py
 db.sqlite3
 db.sqlite3-journal
 
@@ -214,6 +215,12 @@ __marimo__/
 *.ods
 *.tsv
 
-node_modules/
+node_modules/*
 dist/
 build/
+
+#vite
+vite.config.js
+*.pem
+*-workspace
+
