@@ -144,6 +144,9 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.env.prod
+.env.local
+
 
 # Spyder project settings
 .spyderproject
@@ -223,3 +226,4 @@ build/
 vite.config.js
 *.pem
 *-workspace
+BaseAPI.js
