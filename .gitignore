@@ -226,4 +226,8 @@ build/
 vite.config.js
 *.pem
 *-workspace
+<<<<<<< HEAD
 BaseAPI.js
+=======
+
+>>>>>>> 4b516bec85906bdc0f27d87905b8b7f1b7e5d18b

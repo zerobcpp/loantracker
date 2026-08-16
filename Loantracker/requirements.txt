@@ -7,3 +7,4 @@ python-dotenv==1.2.2
 django-import-export
 djangorestframework
 django-cors-headers
+django-cors-headers
