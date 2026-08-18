@@ -26,14 +26,35 @@ class Loan(models.Model):
     
     def __str__(self):
         return f"{self.loan}"
-    
+
+    @property
+    def _history_date(self):
+        explicit_history_date = getattr(self, "_explicit_history_date", None)
+        if explicit_history_date is not None:
+            return explicit_history_date
+
+        if getattr(self, "_use_created_at_for_initial_history", False) and self.created_at:
+            return self.created_at
+
+        raise AttributeError
+
+    @_history_date.setter
+    def _history_date(self, value):
+        self._explicit_history_date = value
     
     def save(self, *args, **kwargs):
-        if not self.location:
+        is_create = self._state.adding
+        self._use_created_at_for_initial_history = is_create
+        if not self.location and not isinstance(self, Commercial_loan):
             self.location = (int(self.loan) * 1009) % BUCKET
         if not self.is_active and not self.closed_at:
             self.closed_at = timezone.now().date()
-        super().save(*args, **kwargs)
+        
+        self.has_note = self.has_mortgage = self.has_title_insurance = True
+        try:
+            super().save(*args, **kwargs)
+        finally:
+            self._use_created_at_for_initial_history = False
 
 class Commercial_loan(Loan):
     history = HistoricalRecords(inherit=True)
@@ -79,3 +100,5 @@ def create_insurance_for_new_commercial_loan(sender, instance, created, **kwargs
 def create_insurance_for_new_residential_loan(sender, instance, created, **kwargs):
     create_insurance_for_new_loan(sender, instance, created, **kwargs)
         
+
+

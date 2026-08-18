@@ -97,36 +97,11 @@ WSGI_APPLICATION = 'Loantracker.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-import boto3
-import psycopg2
-
-def _rds_iam_token():
-    client = boto3.client('rds', region_name='us-east-2')
-    return client.generate_db_auth_token(
-        DBHostname='database-1.cluster-cnkam8yss8hx.us-east-2.rds.amazonaws.com',
-        Port=5432,
-        DBUsername='postgres',
-        Region='us-east-2',
-    )
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "HOST": DB_HOST or 'database-1.cluster-cnkam8yss8hx.us-east-2.rds.amazonaws.com',
-#         "PORT": DB_PORT,
-#         "NAME": DB_NAME or 'postgres',
-#         "USER": DB_USER or 'postgres',
-#         "PASSWORD": DB_PASSWORD or (_rds_iam_token() if DB_USE_IAM else ''),
-#         "OPTIONS": {
-#             "sslmode": "require",
-#         },
-#     }
-# }
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": "mydatabase",
+        "NAME": "mydatabase.sqlite3",
     }
 }
 

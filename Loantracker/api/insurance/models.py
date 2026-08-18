@@ -28,9 +28,13 @@ class Insurance(models.Model):
             self.insurance_end_date = self.insurance_start_date + timedelta(days=365)
         super().save(*args, **kwargs)
         
-        
+    
     def __str__(self):
         return f"{self.loan}"
+    
+    class Meta:
+        verbose_name = "Insurance"
+        verbose_name_plural = "Insurances"
     
     
     
@@ -49,6 +53,11 @@ class InsuranceAgency(models.Model):
     
     def __str__(self):
         return self.name
+    
+    
+    class Meta:
+        verbose_name = "Insurance Agency"
+        verbose_name_plural = "Insurance Agencies"
 
 
         

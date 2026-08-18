@@ -1,7 +1,10 @@
+from datetime import datetime
+
 from django.test import TestCase
+from django.utils import timezone
 
 from api.insurance.models import Insurance
-from api.loan.models import Residential_loan
+from api.loan.models import Commercial_loan, Residential_loan
 
 
 class InsuranceSignalTests(TestCase):
@@ -16,3 +19,39 @@ class InsuranceSignalTests(TestCase):
         )
 
         self.assertTrue(Insurance.objects.filter(loan=loan).exists())
+
+
+class LoanHistoryDateTests(TestCase):
+    def test_initial_history_date_matches_created_at(self):
+        loan = Residential_loan.objects.create(
+            loan='1001',
+            has_note=False,
+            has_mortgage=False,
+            has_title_insurance=False,
+            has_insurance=False,
+            location='-1',
+        )
+
+        initial_history = loan.history.get(history_type='+')
+
+        self.assertEqual(initial_history.history_date, loan.created_at)
+
+    def test_initial_history_date_can_use_data_date_override(self):
+        data_date = timezone.make_aware(datetime(2026, 1, 15, 9, 30))
+        loan = Commercial_loan(
+            loan='1002',
+            has_note=True,
+            has_mortgage=True,
+            has_title_insurance=True,
+            has_insurance=True,
+            has_recorded_mortgage=True,
+            has_UCC1=True,
+            has_Assignment_of_Rents=True,
+            location='-1',
+        )
+        loan._history_date = data_date
+        loan.save()
+
+        initial_history = loan.history.get(history_type='+')
+
+        self.assertEqual(initial_history.history_date, data_date)
