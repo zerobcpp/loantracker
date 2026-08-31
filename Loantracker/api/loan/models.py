@@ -19,7 +19,7 @@ class Loan(models.Model):
     location = models.TextField(null=True, blank=True, help_text="Auto-calculated if wherabout is not provided")
     is_active = models.BooleanField(default=True, help_text="default True, set to False when loan is closed")
     updated_at = models.DateTimeField(auto_now=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now, editable=False)
     closed_at = models.DateField(blank=True, null=True, help_text="Date when loan was closed. Set when is_active is set to False.")
     
     history = HistoricalRecords()

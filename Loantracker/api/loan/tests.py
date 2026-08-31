@@ -55,3 +55,21 @@ class LoanHistoryDateTests(TestCase):
         initial_history = loan.history.get(history_type='+')
 
         self.assertEqual(initial_history.history_date, data_date)
+
+    def test_created_at_can_be_overridden_on_create(self):
+        created_at = timezone.make_aware(datetime(2024, 7, 21))
+
+        loan = Residential_loan.objects.create(
+            loan='1003',
+            has_note=False,
+            has_mortgage=False,
+            has_title_insurance=False,
+            has_insurance=False,
+            location='-1',
+            created_at=created_at,
+        )
+
+        self.assertEqual(loan.created_at, created_at)
+
+        initial_history = loan.history.get(history_type='+')
+        self.assertEqual(initial_history.history_date, created_at)

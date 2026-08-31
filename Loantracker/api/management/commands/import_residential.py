@@ -1,9 +1,13 @@
 import csv
+from datetime import datetime, time
 
 from django.core.management.base import BaseCommand, CommandError
 from api.loan.models import Residential_loan
 from django.utils import timezone
-from datetime import datetime
+
+
+def date_to_created_at(value):
+    return timezone.make_aware(datetime.combine(value, time.min))
 
 class Command(BaseCommand):
     help = 'Import residential loan data from a CSV file'
@@ -33,7 +37,8 @@ class Command(BaseCommand):
                         insurance = True if s[26] != '' else False
                         recorded_mortgage = True if s[34] != '' else False               
                         #LNT_date = s[6] if s[6] else timezone.now().date()
-                        naive = datetime.strptime(s[13], "%m/%d/%Y").date() if s[13] else datetime.now().date()
+                        naive = datetime.strptime(s[13], "%m/%d/%Y").date() if s[13] else datetime.strptime(s[3], "%m/%d/%Y").date() if s[3] else timezone.now().date()
+                        created_at = date_to_created_at(naive)
                         
                         #aware = timezone.make_aware(naive).date()
 
@@ -43,9 +48,10 @@ class Command(BaseCommand):
                             loan=loan,
                             has_insurance=insurance,
                             has_recorded_mortgage=recorded_mortgage,
-                            location = "-1"
+                            location = "-1",
+                            created_at=created_at,
                         )
-                        c._history_date = naive
+                        c._history_date = created_at
                         c.save()
                         count += 1
                     else:
