@@ -34,10 +34,11 @@ class Command(BaseCommand):
                         loan = s[0]
                         # note = True if s[12] != '' else False
                         # title = True if s[18] != '' else False
-                        insurance = True if s[26] != '' else False
-                        recorded_mortgage = True if s[34] != '' else False               
+                        insurance = True if s[24] != '' else False
+                        recorded_mortgage = True if s[30] != '' else False               
                         #LNT_date = s[6] if s[6] else timezone.now().date()
-                        naive = datetime.strptime(s[13], "%m/%d/%Y").date() if s[13] else datetime.strptime(s[3], "%m/%d/%Y").date() if s[3] else timezone.now().date()
+                        naive = datetime.strptime(s[12], "%m/%d/%Y").date() if s[13] else datetime.strptime(s[3], "%m/%d/%Y").date() if s[3] else timezone.now().date()
+                        #print(naive)
                         created_at = date_to_created_at(naive)
                         
                         #aware = timezone.make_aware(naive).date()
@@ -50,6 +51,7 @@ class Command(BaseCommand):
                             has_recorded_mortgage=recorded_mortgage,
                             location = "-1",
                             created_at=created_at,
+                            updated_at=created_at, 
                         )
                         c._history_date = created_at
                         c.save()
